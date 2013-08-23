@@ -41,7 +41,7 @@ if (!class_exists('PDO'))
 
 // Check if DB data is set
 $db_fields = array($config->db_host, $config->db_name, $config->db_username,
-                   $config->db_password, $config->db_prefix);
+                   $config->db_password/*, $config->db_prefix*/);
 
 foreach ($db_fields as $field)
 {
@@ -52,7 +52,7 @@ foreach ($db_fields as $field)
 }
 
 // Check if the tables already exist
-$sql = "SHOW TABLES LIKE '{$db->prefix}%'";
+$sql = $db->prefix ? "SHOW TABLES LIKE '{$db->prefix}%'" : "SHOW TABLES NOT LIKE '%_%'";
 $rows = $db->query($sql);
 
 if (!empty($rows) && count($rows) > 0)

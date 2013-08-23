@@ -1,11 +1,16 @@
 # PHP.ini config stuff
-php_flag magic_quotes_gpc off
+#php_flag magic_quotes_gpc off
 
 # Disable MultiViews
 Options -MultiViews
 
 # Rewrite rules
 RewriteEngine on
+RewriteBase /
+
+# Tell PHP that rewrite rules are available
+SetEnv HTTP_MOD_REWRITE On
+
 
 # Setup links
 RewriteRule ^install/?$ install.php [NC]

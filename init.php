@@ -15,8 +15,8 @@ error_reporting(0);
 session_start();
 
 // Define constants
-define('UPDATE_SERVER', 'https://raw.github.com/sayakb/sticky-notes/master/VERSION');
-define('UPDATE_DL_PATH', 'https://github.com/sayakb/sticky-notes/zipball/master');
+define('UPDATE_SERVER', 'https://raw.github.com/gtgt/sticky-notes/master/VERSION');
+define('UPDATE_DL_PATH', 'https://github.com/gtgt/sticky-notes/zipball/master');
 
 // Include classes
 include_once('classes/class_gsod.php');
