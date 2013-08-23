@@ -86,6 +86,7 @@ if ($paste_search && !is_numeric($paste_id))
         foreach ($rows as $row) {
           global $nav;
           $skin->assign(array(
+              'paste_id'              => $row['id'],
               'paste_author'          => (empty($row['author']) ? $lang->get('anonymous') : htmlentities($row['author'])),
               'paste_time'            => date('Y.m.d H:i:s', $row['timestamp']),
               'paste_expire'          => $row['expire'] ? date('Y.m.d H:i:s', $row['expire']) : '-',
@@ -124,6 +125,7 @@ if (($paste_search && is_numeric($paste_id)) || $paste_edit || $paste_rempass ||
         $detail_visibility = 'visible';
         global $nav;
         $skin->assign(array(
+            'paste_id'              => $row['id'],
             'paste_author'          => (empty($row['author']) ? $lang->get('anonymous') : htmlentities($row['author'])),
             'paste_time'            => date('d M Y, H:i:s e', $row['timestamp']),
             'paste_expire'          => date('d M Y, H:i:s e', $row['expire']),
