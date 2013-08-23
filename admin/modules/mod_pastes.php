@@ -13,7 +13,8 @@ $paste_id = $core->variable('paste_id', '');
 $paste_search = isset($_POST['paste_search']);
 $paste_rempass = isset($_POST['paste_rempass']);
 $paste_makepub = isset($_POST['paste_makepub']);
-$paste_delete = isset($_POST['paste_delete']);
+$paste_delete = isset($_POST['paste_delete']) || (isset($_GET['action']) && ($_GET['action'] == 'delete')) ? true : false;
+$paste_edit = isset($_POST['paste_edit']) || (isset($_GET['action']) && ($_GET['action'] == 'editor')) ? true : false;
 
 // Set globals
 $paste_id_orig = $paste_id;
@@ -36,8 +37,13 @@ if ($paste_id)
         $paste_id = intval($paste_id);
         $sql_where = "WHERE id = :paste_id";
     }
+    else if (!empty($paste_id))
+    {
+        $sql_where = "WHERE author LIKE :search OR data LIKE :search";
+        $params = array(':search' => '%'.trim($paste_id).'%');
+    }
 
-    $params = array(':paste_id' => trim($paste_id));
+    if (empty($params)) $params = array(':paste_id' => trim($paste_id));
 }
 
 // Make public
@@ -66,28 +72,68 @@ if ($paste_rempass && $paste_id)
         'rempass_visibility'    => 'collapsed',
     ));
 }
-
 // Search form submitted
-if ($paste_search || $paste_rempass || $paste_makepub)
+if ($paste_search && !is_numeric($paste_id))
+{
+    $sql = "SELECT * FROM {$db->prefix}main " . $sql_where;
+    $rows = $db->query($sql, $params);
+    $pastes_list = '';
+    
+    if ($rows != null)
+    {
+        $spacer_visibility = 'collapsed';
+        $detail_visibility = 'visible';
+        foreach ($rows as $row) {
+          global $nav;
+          $skin->assign(array(
+              'paste_author'          => (empty($row['author']) ? $lang->get('anonymous') : htmlentities($row['author'])),
+              'paste_time'            => date('Y.m.d H:i:s', $row['timestamp']),
+              'paste_expire'          => $row['expire'] ? date('Y.m.d H:i:s', $row['expire']) : '-',
+              'paste_data'            => htmlentities(substr($row['data'], 0, 100), ENT_IGNORE, 'UTF-8') . '&hellip;',
+              'paste_private'         => ($row['private'] == 1 ? $lang->get('yes') : $lang->get('no')),
+              'paste_haspass'         => (!empty($row['password']) ? $lang->get('yes') : $lang->get('no')),
+              'paste_ip'              => $row['ip'],
+              'paste_lastread_timestamp' => $row['lastread_timestamp'] ? date('Y.m.d H:i:s', $row['lastread_timestamp']) : '-',
+              'paste_lastread_ip'     => $row['lastread_ip'],
+              'rempass_visibility'    => (!empty($row['password']) ? 'visible' : 'collapsed'),
+              'makepub_visibility'    => ($row['private'] == 1 ? 'visible' : 'collapsed'),
+              'paste_view_link'        => $nav->get_paste($row['id'], $row['urlkey'], $row['hash'], $row['project']),
+              'paste_edit_link'        => $core->current_uri() . '?mode=pastes&action=editor&paste_id=' . $row['id'],
+              'paste_delete_link'      => $core->current_uri() . '?mode=pastes&action=delete&paste_id=' . $row['id'],
+          ));
+          $pastes_list .= $skin->output('tpl_pastes_entry', true, true);
+        }
+        $skin->assign('pastes_list', $pastes_list);
+    }
+    else if ($paste_id > 0)
+    {
+        $module->notify($lang->get('paste_id_404'));
+    }
+    $skin->assign('paste_id', $paste_id);
+    $module_data =  $skin->output('tpl_pastes_list', false, true);
+}
+
+// Edit form
+if (($paste_search && is_numeric($paste_id)) || $paste_edit || $paste_rempass || $paste_makepub)
 {
     $sql = "SELECT * FROM {$db->prefix}main " . $sql_where;
     $row = $db->query($sql, $params, true);
-
     if ($row != null)
     {
         $spacer_visibility = 'collapsed';
         $detail_visibility = 'visible';
-
+        global $nav;
         $skin->assign(array(
             'paste_author'          => (empty($row['author']) ? $lang->get('anonymous') : htmlentities($row['author'])),
             'paste_time'            => date('d M Y, H:i:s e', $row['timestamp']),
             'paste_expire'          => date('d M Y, H:i:s e', $row['expire']),
-            'paste_data'            => htmlentities(substr($row['data'], 0, 100)) . '&hellip;',
+            'paste_data'            => htmlentities(substr($row['data'], 0, 100), ENT_IGNORE, 'UTF-8') . '&hellip;',
             'paste_private'         => ($row['private'] == 1 ? $lang->get('yes') : $lang->get('no')),
             'paste_haspass'         => (!empty($row['password']) ? $lang->get('yes') : $lang->get('no')),
             'paste_ip'              => $row['ip'],
             'rempass_visibility'    => (!empty($row['password']) ? 'visible' : 'collapsed'),
             'makepub_visibility'    => ($row['private'] == 1 ? 'visible' : 'collapsed'),
+            'paste_view_link'       =>  $nav->get_paste($row['id'], $row['urlkey'], $row['hash'], $row['project']),
         ));
     }
     else if ($paste_id)
@@ -116,6 +162,6 @@ $skin->assign(array(
 
 // Set the module data
 $module_title = $lang->get('manage_pastes');
-$module_data =  $skin->output('tpl_pastes', false, true);
+if (!isset($module_data)) $module_data =  $skin->output('tpl_pastes', false, true);
 
 ?>

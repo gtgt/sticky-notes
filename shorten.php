@@ -101,6 +101,8 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 // Execute the post
 $result = curl_exec($ch);
 
+$error = curl_error($ch);
+
 // Close the connection
 curl_close($ch);
 
@@ -113,7 +115,7 @@ if (isset($response['id']))
 }
 else
 {
-    die("ERROR");
+    die("ERROR" . ($curl_error ? " - " . $curl_error : "") . (isset($response['error']) ? " - [" . $response['error']['code'] . "] " . $response['error']['message'] : ""));
 }
 
 ?>

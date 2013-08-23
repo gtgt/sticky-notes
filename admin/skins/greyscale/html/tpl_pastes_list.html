@@ -1,0 +1,34 @@
+<div class="greybox">
+    <label for="paste_id">{{search_paste_id}}</label>
+    <input type="text" id="paste_id" name="paste_id" class="textbox" value="[[paste_id]]" />
+    <input type="submit" name="paste_search" value="{{search}}" class="button" />
+</div>
+
+<!-- <div class="greybox hugefonts [[spacer_visibility]]">
+    {{search_exp}}
+</div> -->
+
+<div class="greybox [[detail_visibility]]">
+<h3>{{paste_details}}</h3>
+    
+    <div class="spacer">&nbsp;</div>
+    <div class="spacer">&nbsp;</div>
+    
+    <table class="gridview hoveractive" width="100%">
+    <thead>
+    <tr>
+        <td></td>
+        <td>{{author}}</td>
+        <td>{{posted_on}}</td>
+        <td>{{expires_on}}</td>
+        <td>{{data}}</td>
+        <td>{{has_password}}</td>
+        <td width="90">{{actions}}</td>
+    </tr>
+    </thead>
+    
+    <tbody>
+        [[pastes_list]]
+    </tbody>
+    </table>
+</div>

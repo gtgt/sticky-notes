@@ -9,7 +9,7 @@
 */
 
 // Turn off error reporting
-error_reporting(0);
+error_reporting(defined('IN_ADMIN') ? E_ALL & ~E_STRICT : 0);
 
 // Create a new session
 session_start();

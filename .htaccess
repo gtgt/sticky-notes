@@ -8,10 +8,6 @@ Options -MultiViews
 RewriteEngine on
 RewriteBase /
 
-# Tell PHP that rewrite rules are available
-SetEnv HTTP_MOD_REWRITE On
-
-
 # Setup links
 RewriteRule ^install/?$ install.php [NC]
 RewriteRule ^upgrade/?$ upgrade.php [NC]

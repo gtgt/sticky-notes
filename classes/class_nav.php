@@ -41,13 +41,13 @@ class nav
             global $core;
 
             // Set URL bases
-            $base = $core->current_uri();
+            $base = $core->root_uri();
 
             $arg_project = !empty($project) ? '?project=' . $project : '?';
             $arg_page = $page > 1 ? "&page={$page}" : "";
             $arg_age = !empty($age) ? "&age={$age}" : "";
 
-            $rewrite_base = $core->current_uri() . (!empty($project) ? "~{$project}/" : "");
+            $rewrite_base = $base . (!empty($project) ? "~{$project}/" : "");
             $rewrite_page = $page > 1 ? "{$page}/" : "";
             $rewrite_age = !empty($age) ? "{$age}/" : "";
 
@@ -112,14 +112,14 @@ class nav
 
             if ($this->rewrite_on)
             {
-                $url = $core->current_uri() . (!empty($project) ? "~{$project}/" : "") .
+                $url = $core->root_uri() . (!empty($project) ? "~{$project}/" : "") .
                                               "{$key}/" .
                                               (!empty($hash) ? "{$hash}/" : "") .
                                               (!empty($format) ? "{$format}/" : "");
             }
             else
             {
-                $url = $core->current_uri() . "show.php?id={$key}" .
+                $url = $core->root_uri() . "show.php?id={$key}" .
                                               (!empty($hash) ? "&hash={$hash}" : "") .
                                               (!empty($project) ? "&project={$project}" : "") .
                                               (!empty($format) ? "&mode={$format}" : "");

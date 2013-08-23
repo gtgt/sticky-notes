@@ -47,13 +47,13 @@ class skin
     }
 
     // Function to assign template variables
-    function assign($data, $value = "")
+    function assign($data, $value = null)
     {
-        if (!is_array($data) && $value)
+        if (is_scalar($data) && isset($value))
         {
             $this->skin_vars[$data] = $value;
         }
-        else
+        else if (is_array($data))
         {
             foreach ($data as $key => $value)
             {

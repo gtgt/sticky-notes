@@ -15,9 +15,9 @@ $action = $core->variable('action', '');
 if ($action == 'version')
 {
     $version = file_get_contents(UPDATE_SERVER, false);
-    $version = explode("\n", $version);
+    $version = explode("\n", $version, 2);
 
-    die($version[1]);
+    die(count($version) > 1 ? $version[1] : $version[0]);
 }
 
 // Check if we just want server load

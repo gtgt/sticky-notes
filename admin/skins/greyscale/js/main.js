@@ -92,13 +92,19 @@ $(document).ready(function() {
 
     // Server load checker
     if ($('#stickynotes_sysload').length > 0) {
-        setInterval(function() {
+        var tim = 0;
+        function sysload() {
             var url = '?action=sysload';
-
             $.get(url, function(data) {
+                if (!data) {
+                  clearInterval(tim);
+                  $('#stickynotes_sysload').closest('tr').remove()
+                }
                 $('#stickynotes_sysload').html(data);
                 $('#wait_sysload').hide();
             });
-        }, 2000);
+        }
+        tim = setInterval(sysload, 10000);
+        sysload();
     }
 });

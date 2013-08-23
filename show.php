@@ -230,7 +230,9 @@ $hit_time = $cache->get($hit_key);
 
 if ($hit_time === false)
 {
-    $sql = "UPDATE {$db->prefix}main SET hits = hits + 1 WHERE {$sql_where}";
+    $sql = "UPDATE {$db->prefix}main SET hits = hits + 1, lastread_ip = :lastread_timestamp, :lastread_ip WHERE {$sql_where}";
+    $params[':lastread_timestamp'] = time();
+    $params[':lastread_ip'] = $_SERVER['REMOTE_ADDR'];
     $db->query($sql, $params);
 
     if ($db->affected_rows == 1)

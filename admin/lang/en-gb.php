@@ -48,6 +48,7 @@ $lang_data = array(
     'name'                  => 'Name',
     'email'                 => 'E-mail',
     'actions'               => 'Actions',
+    'view'                  => 'View',
     'edit'                  => 'Edit',
     'delete'                => 'Delete',
     'required'              => 'required',

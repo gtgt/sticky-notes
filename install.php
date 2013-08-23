@@ -79,9 +79,11 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}main (" .
            "salt VARCHAR(5) NOT NULL, " .
            "private TINYINT(1) NOT NULL DEFAULT 0, " .
            "hash INT(12) UNSIGNED NOT NULL, " .
-           "ip VARCHAR(50) NOT NULL, " .
+           "ip VARCHAR(15) NOT NULL, " .
            "urlkey VARCHAR(8) DEFAULT '', " .
            "hits INT(11) NOT NULL DEFAULT 0, " .
+           "lastread_timestamp INT(11) UNSIGNED NOT NULL, " .
+           "lastread_ip VARCHAR(15) NOT NULL, " .
            "PRIMARY KEY(id)) ENGINE = MyISAM");
 
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}session (" .
