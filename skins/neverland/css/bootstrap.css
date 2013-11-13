@@ -1520,7 +1520,7 @@ select:focus:required:invalid:focus {
 .input-prepend {
   margin-bottom: 5px;
   font-size: 0;
-  white-space: nowrap;
+  /* that's wired why i need remove this: white-space: nowrap;*/
 }
 
 .input-append input,
